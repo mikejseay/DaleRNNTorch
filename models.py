@@ -202,7 +202,7 @@ class RNN_Dale_Sum(nn.Module):
 
         self.n_units = n_units  # number of neurons
         self.inp = nn.Parameter(torch.rand(n_inputs, n_units, device=device))  # input weights
-        self.Wrecnon = nn.Parameter((torch.rand(n_units, n_units, device=device) * 2 - 1) \
+        self.Wrecnon = nn.Parameter((torch.rand(n_units, n_units, device=device) - 1) \
                                      / n_units)  # recurrent weights - non-Dale
         self.Wrecdale = nn.Parameter(torch.rand(n_units, n_units, device=device) \
                                      / n_units)  # recurrent weights - Dale
@@ -238,6 +238,7 @@ class RNN_Dale_Sum(nn.Module):
                 torch.randn(inputs.size(2), inputs.size(0), self.n_units, device=device)
         # use_alpha = torch.sigmoid(self.alpha)
         use_alpha = hard_tanh_0to1(self.alpha)
+        # use_alpha = self.alpha
 
         self.Wsum = use_alpha * torch.matmul(torch.abs(self.Wrecdale), self.Sdale) + \
                      (1 - use_alpha) * self.Wrecnon
@@ -276,6 +277,7 @@ class RNN_Dale_Sum(nn.Module):
                 torch.randn(inputs.size(2), inputs.size(0), self.n_units, device=device)
         # use_alpha = torch.sigmoid(self.alpha)
         use_alpha = hard_tanh_0to1(self.alpha)
+        # use_alpha = self.alpha
         self.Wsum = use_alpha * torch.matmul(torch.abs(self.Wrecdale), self.Sdale) + \
                     use_alpha * self.Wrecnon
 

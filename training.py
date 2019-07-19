@@ -53,6 +53,9 @@ def basic_training(n_iter, batch_size, target_stim_fn, model, loss_fn, optimizer
         # clip alpha
         # model.alpha = torch.nn.Parameter(torch.clamp(model.alpha, -1, 1))
 
+    if hasattr(model, 'alpha'):
+        model.Wrecdale = torch.abs(model.Wrecdale)
+
     t1 = time.time()
     print('took', t1 - t0, 'seconds')
 
@@ -78,7 +81,10 @@ def explicit_training(n_iter, batch_size, stim, target_series, model, loss_fn, o
         if (i + 1) % 20 == 0:  # print progress every 100 iterations
             print('%.2f%% iterations completed...loss = %.2f' % (100 * (i + 1) / n_iter, loss))
 
-        batch_stim = stim.unsqueeze(0).unsqueeze(0).repeat(batch_size, 1, 1)
+        if len(stim.shape) == 1:
+            batch_stim = stim.unsqueeze(0).unsqueeze(0).repeat(batch_size, 1, 1)
+        elif len(stim.shape) == 2:
+            batch_stim = stim.unsqueeze(0).repeat(batch_size, 1, 1)
         batch_target_series = target_series.unsqueeze(0).repeat(batch_size, 1)
 
         outputs, hidden, track_outputs = model.forward_outputs(batch_stim)
@@ -106,6 +112,9 @@ def explicit_training(n_iter, batch_size, stim, target_series, model, loss_fn, o
 
         # clip alpha
         # model.alpha = torch.nn.Parameter(torch.clamp(model.alpha, -1, 1))
+
+    if hasattr(model, 'alpha'):
+        model.Wrecdale = torch.nn.Parameter(torch.abs(model.Wrecdale))
 
     t1 = time.time()
     print('took', t1 - t0, 'seconds')

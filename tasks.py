@@ -5,12 +5,14 @@ from scipy.stats import norm, zscore
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print('Using', device)
 
+
 def sample_stimuli_continuous_samesign(batch_size, stimulus_mean, stimulus_noise, stimulus_duration):
     # Function to generate stimulus
     target = torch.ones(batch_size, device=device)  # -1 or 1
-    stim = target.unsqueeze(-1) * stimulus_mean +\
+    stim = target.unsqueeze(-1) * stimulus_mean + \
            stimulus_noise * torch.randn(batch_size, stimulus_duration, device=device).unsqueeze(1)
     return target, stim
+
 
 def sample_stimuli_continuous(batch_size, stimulus_mean, stimulus_noise, stimulus_duration):
     # Function to generate stimulus
@@ -20,6 +22,7 @@ def sample_stimuli_continuous(batch_size, stimulus_mean, stimulus_noise, stimulu
                      stimulus_noise * torch.randn(batch_size, stimulus_duration, device=device)).unsqueeze(1)
     return target, stim
 
+
 def sample_log_stimuli_continuous(batch_size, stimulus_noise, stimulus_duration):
     # Function to generate stimulus
     target = torch.sign(torch.randn(batch_size, device=device))  # -1 or 1
@@ -28,6 +31,7 @@ def sample_log_stimuli_continuous(batch_size, stimulus_noise, stimulus_duration)
     stim = torch.mul(target, sampled_means).unsqueeze(-1).unsqueeze(-1) + \
            stimulus_noise * torch.randn(batch_size, stimulus_duration, device=device).unsqueeze(1)
     return target, stim
+
 
 def sample_stimuli_brief(batch_size, stimulus_noise, stimulus_duration, on_duration):
     # Function to generate stimulus
@@ -39,6 +43,7 @@ def sample_stimuli_brief(batch_size, stimulus_noise, stimulus_duration, on_durat
     noise = stimulus_noise * np.random.randn(*multiple_square_waves.shape)
     stim = target.unsqueeze(-1) * torch.Tensor(multiple_square_waves + noise).unsqueeze(1)
     return target, stim
+
 
 def sample_stimuli_brief_pulse(batch_size, stimulus_mean, stimulus_noise, stimulus_duration, start_time, end_time):
     # Function to generate stimulus
@@ -63,6 +68,7 @@ bell2 = norm.pdf(t, center2, width)
 # bells_bwd = zscore(np.vstack([bell2, bell1]), 1)
 bells_fwd = np.vstack([bell1, bell2])
 bells_bwd = np.vstack([bell2, bell1])
+
 
 def sample_sequential_bells(batch_size):
     order_bool = np.random.randint(0, 2, (batch_size,)).astype(bool)

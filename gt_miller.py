@@ -43,8 +43,9 @@ W_miller = (4 + (2 / 7)) * np.array([[1, -k], [1, -k]])
 W_millermean = np.fabs(W_miller).mean()
 
 apply_noise = False
-use_dale = True
-if use_dale:
+gt_is_dale = True
+trained_is_dale = False
+if gt_is_dale:
     model_gt = RNN_Dale(n_units, prop_exc, n_inputs, apply_noise=apply_noise)
     print_trainable_parameters(model_gt)
     # model_gt.inp = nn.Parameter(torch.Tensor(np.array([1, 1])).unsqueeze(0))
@@ -85,9 +86,11 @@ f, ax = plt.subplots(1, 2, figsize=(11, 5))
 ax[0].plot(use_stim.detach().cpu().numpy())
 ax[1].plot(use_output.detach().cpu().numpy())
 
+if trained_is_dale:
+    model = RNN_Dale_Sum(n_units, prop_exc, alpha_dale=alpha_dale, n_inputs=n_inputs, apply_noise=apply_noise)
+else:
+    model = RNN(n_units, n_inputs=n_inputs, apply_noise=apply_noise)
 
-model = RNN_Dale_Sum(n_units, prop_exc, alpha_dale=alpha_dale, n_inputs=n_inputs, apply_noise=apply_noise)
-# model = RNN(n_units, n_inputs=n_inputs, apply_noise=apply_noise)
 print_trainable_parameters(model)
 
 w_output_start, w_input_start, w_rec_start = extract_weights(model)

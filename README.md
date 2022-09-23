@@ -1,5 +1,5 @@
 # Is Dale’s law computationally beneficial?
-## Michael Seay – Project Proposal – CCNSS 2019
+## Michael Seay – CCNSS 2019
 
 Dale’s law states that each of a neuron’s synaptic terminals releases the same set of neurotransmitters<sup>1</sup>. In most cases, Dale’s law means that each neuron is strictly excitatory or inhibitory, and it cannot have excitatory effects at one terminal and inhibitory effects at another.
 
